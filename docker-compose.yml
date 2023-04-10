@@ -1,0 +1,33 @@
+version: '3'
+services:
+  redis:
+    image: "redis"
+    container_name: redis-container
+    command: redis-server
+    ports:
+      - "6379:6379"
+    environment:
+      - REDIS_REPLICATION_MODE=master
+  mongo:
+    image: mongo
+    container_name: mongo-container
+    restart: always
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: root
+
+  mongo-express:
+    image: mongo-express
+    container_name: mongo-gui-container
+    restart: always
+    ports:
+      - "8082:8081"
+    environment:
+      ME_CONFIG_MONGODB_SERVER: mongo
+      ME_CONFIG_MONGODB_PORT: 27017
+      ME_CONFIG_MONGODB_ADMINUSERNAME: root
+      ME_CONFIG_MONGODB_ADMINPASSWORD: root
+    depends_on:
+      - mongo
