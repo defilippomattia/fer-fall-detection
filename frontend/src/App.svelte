@@ -6,7 +6,7 @@
 	let alerts = [];
   
 	async function fetchAlerts() {
-	  const response = await fetch('http://localhost:8081/alerts');
+	  const response = await fetch('http://localhost:6500/alerts');
 	  alerts = await response.json();
 	  console.log(alerts.length);
 	}

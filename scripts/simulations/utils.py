@@ -32,4 +32,4 @@ def get_random_phone_num():
     return prefix + rand_digits
 
 def get_alerts_endpoint():
-    return "http://localhost:8081/alerts"
+    return "http://localhost:6500/alerts"

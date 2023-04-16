@@ -7,8 +7,9 @@ import sys
 import socket
 import datetime
 
-hand_raised_endpoint = "http://localhost:8081/alerts"
 
+fall_detected = False
+alerts_endpoint = "http://localhost:6500/alerts"
 def get_lat_lon():
     return "45.50", "-73.56"
 
@@ -21,6 +22,10 @@ payload = {
     "timestamp": ""
 }
 
+# Define font and color for text overlay
+font = cv2.FONT_HERSHEY_SIMPLEX
+font_scale = 1
+color = (0, 0, 255) # red color
 
 cap = cv2.VideoCapture(0)
 mp_drawing = mp.solutions.drawing_utils
@@ -39,39 +44,39 @@ with mp_pose.Pose(min_detection_confidence=0.5, min_tracking_confidence=0.5) as 
         # Recolor back to BGR
         image.flags.writeable = True
         image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
+
+        y_nose = results.pose_landmarks.landmark[mp_pose.PoseLandmark.NOSE].y
+
+        print(y_nose)
+
+        time.sleep(0.1)
+
+        if y_nose > 0.7:
+            fall_detected = True
+        else:
+            fall_detected = False
         
-        # Extract landmarks
-        try:
-            try:
-                right_hand_y = results.pose_landmarks.landmark[mp_pose.PoseLandmark.RIGHT_ELBOW].y
-            except Exception as e:
-                print(e)
-                right_hand_y = 0
-            try:
-                right_shoulder_y = results.pose_landmarks.landmark[mp_pose.PoseLandmark.RIGHT_SHOULDER].y
-            except Exception as e:
-                print(e)
-                right_shoulder_y = 0
-            if (right_hand_y < right_shoulder_y):
-                print("HAND RAISED")
-                try:
-                    print(f"Making a POST request to {hand_raised_endpoint}...")
-                    payload["timestamp"] = datetime.datetime.now().isoformat()
-                    response = requests.post(hand_raised_endpoint, json=payload)
-                except Exception as e:
-                    print(f"Could not make a POST request to {hand_raised_endpoint}, error: {e}")
-                time.sleep(5)
-            landmarks = results.pose_landmarks.landmark
-        except:
-            pass
-        
-        # Render detections
+        if fall_detected:
+            message = "Fall Detected!"
+        else:
+            message = "No Fall"
+
+        cv2.putText(image, message, (10, 50), font, font_scale, color, 2, cv2.LINE_AA)
+
         mp_drawing.draw_landmarks(image, results.pose_landmarks, mp_pose.POSE_CONNECTIONS,
                                 mp_drawing.DrawingSpec(color=(245,117,66), thickness=2, circle_radius=2), 
                                 mp_drawing.DrawingSpec(color=(245,66,230), thickness=2, circle_radius=2) 
                                  )               
         
         cv2.imshow('Mediapipe Feed', image)
+
+        if fall_detected:
+            try:
+                print(f"Making a POST request to {alerts_endpoint}...")
+                payload["timestamp"] = datetime.datetime.now().isoformat()
+                response = requests.post(alerts_endpoint, json=payload)
+            except Exception as e:
+                print(f"Could not make a POST request to {alerts_endpoint}, error: {e}")
 
         if cv2.waitKey(10) & 0xFF == ord('q'):
             break

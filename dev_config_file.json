@@ -1,0 +1,19 @@
+{
+    "server": {
+        "url":"http://localhost:6500/alerts"
+    },
+    "frontend":{
+        "url":"http://localhost:6501"
+    },
+    "db":{
+        "host":"localhost",
+        "username":"root",
+        "password":"root",
+        "port":"27017",
+        "guiurl":"http://localhost:6503"
+    },
+    "redis":{
+        "host":"localhost",
+        "port":"6379"
+    }
+}

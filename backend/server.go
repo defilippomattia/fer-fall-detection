@@ -391,5 +391,5 @@ func main() {
 
 	http.HandleFunc("/alerts", alertsHandlerFunc(deps))
 
-	log.Fatal(http.ListenAndServe("localhost:8081", nil))
+	log.Fatal(http.ListenAndServe("localhost:6500", nil))
 }

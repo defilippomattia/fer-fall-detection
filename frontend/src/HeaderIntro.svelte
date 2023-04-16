@@ -18,6 +18,6 @@
   
   <div class="header">
     <h1 class="header-title">Alerts Dashboard</h1>
-    <p class="header-description">View the latest alerts in real-time.</p>
+    <p class="header-description"></p>
   </div>
   
