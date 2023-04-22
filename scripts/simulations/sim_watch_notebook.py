@@ -34,18 +34,20 @@ watch_payload = {
 url = utils.get_alerts_endpoint()
 
 for i in range(num_notebook_requests):
+    latlong = utils.get_random_fer_lat_lon()
     notebook_payload["source_id"] = utils.get_random_hostname()
-    notebook_payload["longitude"] = utils.get_random_lon()
-    notebook_payload["latitude"] = utils.get_random_lat()
+    notebook_payload["latitude"] = latlong[0]
+    notebook_payload["longitude"] = latlong[1]
     notebook_payload["timestamp"] = utils.get_timestamp()
     time.sleep(utils.get_random_sleep())
     response = requests.post(url, json=notebook_payload)
 
 for i in range(num_watch_requests):
+    latlong = utils.get_random_fer_lat_lon()
     watch_payload["data"]["owner"] = utils.get_random_phone_num()
     watch_payload["data"]["contact"] = utils.get_random_phone_num()
     watch_payload["data"]["timestamp"] = utils.get_timestamp()
-    watch_payload["data"]["content"] = f"My current location: http://maps.google.com/maps?q={utils.get_random_lat()},{utils.get_random_lon()}"
+    watch_payload["data"]["content"] = f"My current location: http://maps.google.com/maps?q={latlong[0]},{latlong[1]}"
     time.sleep(utils.get_random_sleep())
     response = requests.post(url, json=watch_payload)
 

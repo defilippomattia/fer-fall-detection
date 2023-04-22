@@ -8,16 +8,26 @@ def get_random_hostname():
     rand_letters = ''.join(random.choices(string.ascii_uppercase + string.digits, k=7))
     return prefix + rand_letters + suffix
 
-def get_random_lat():
-    min_lat, max_lat = -90.0, 90.0
-    lat = round(random.uniform(min_lat, max_lat), 2)
-    return (str(lat))
+# def get_random_lat():
+#     min_lat, max_lat = -90.0, 90.0
+#     lat = round(random.uniform(min_lat, max_lat), 2)
+#     return (str(lat))
 
 
-def get_random_lon():
-    min_lon, max_lon = -180.0, 180.0
-    lon = round(random.uniform(min_lon, max_lon), 2)
-    return str(lon)
+# def get_random_lon():
+#     min_lon, max_lon = -180.0, 180.0
+#     lon = round(random.uniform(min_lon, max_lon), 2)
+#     return str(lon)
+
+def get_random_fer_lat_lon():
+    bounds = [[45.80006, 15.97061], [45.80163, 15.97181]]
+    coordinates = []
+    lat = random.uniform(bounds[0][0], bounds[1][0])
+    lng = random.uniform(bounds[0][1], bounds[1][1])
+    coordinates.append(str(lat))
+    coordinates.append(str(lng))
+    return coordinates
+
 
 def get_timestamp():
     return datetime.now().strftime("%Y-%m-%d %H:%M:%S")

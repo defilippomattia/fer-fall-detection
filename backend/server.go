@@ -7,6 +7,7 @@ import (
 	"log"
 	"net/http"
 	"regexp"
+	"strconv"
 	"strings"
 
 	"github.com/redis/go-redis/v9"
@@ -212,6 +213,79 @@ func alertsHandler(w http.ResponseWriter, r *http.Request, deps *HandlersDepende
 	}
 }
 
+func getAlertsLocationsHandler(w http.ResponseWriter, r *http.Request, deps *HandlersDependencies) {
+	w.Header().Set("Content-Type", "application/json")
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	w.Header().Set("Access-Control-Allow-Methods", "GET, POST, OPTIONS, PATCH")
+	w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
+
+	client := deps.mongoClient
+	collection := client.Database("fer-fall-detect").Collection("alerts")
+
+	// Query the MongoDB database to retrieve all alerts
+	cursor, err := collection.Find(context.Background(), bson.M{})
+	if err != nil {
+		log.Println(err)
+		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+		return
+	}
+	defer cursor.Close(context.Background())
+
+	// Store the latitudes and longitudes in a slice of slices
+	latLongs := [][]float64{}
+	for cursor.Next(context.Background()) {
+		var alert AlertMsg
+		if err := cursor.Decode(&alert); err != nil {
+			log.Println(err)
+			http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+			return
+		}
+		lat, err := strconv.ParseFloat(alert.Latitude, 64)
+		if err != nil {
+			log.Println(err)
+			http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+			return
+		}
+		long, err := strconv.ParseFloat(alert.Longitude, 64)
+		if err != nil {
+			log.Println(err)
+			http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+			return
+		}
+		latLongs = append(latLongs, []float64{lat, long})
+	}
+	if err := cursor.Err(); err != nil {
+		log.Println(err)
+		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+		return
+	}
+
+	// Encode the slice of latitudes and longitudes as JSON
+	jsonBytes, err := json.Marshal(latLongs)
+	if err != nil {
+		log.Println(err)
+		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+		return
+	}
+	// Write the JSON response back to the client
+	w.WriteHeader(http.StatusOK)
+	w.Write(jsonBytes)
+}
+
+func alertsLocationsHandler(w http.ResponseWriter, r *http.Request, deps *HandlersDependencies) {
+	switch r.Method {
+	case "GET":
+		getAlertsLocationsHandler(w, r, deps)
+	case "OPTIONS":
+		w.Header().Set("Access-Control-Allow-Origin", "*")
+		w.Header().Set("Access-Control-Allow-Methods", "GET, POST, PATCH, OPTIONS")
+		w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
+		w.WriteHeader(http.StatusOK)
+	default:
+		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+	}
+}
+
 func ignoreWatchMsg(requestBody map[string]interface{}) bool {
 	data, ok := requestBody["data"].(map[string]interface{})
 	if !ok {
@@ -370,6 +444,12 @@ func alertsHandlerFunc(deps *HandlersDependencies) http.HandlerFunc {
 	}
 }
 
+func alertsLocationsHandlerFunc(deps *HandlersDependencies) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		alertsLocationsHandler(w, r, deps)
+	}
+}
+
 func main() {
 	// start the server
 
@@ -390,6 +470,7 @@ func main() {
 	}
 
 	http.HandleFunc("/alerts", alertsHandlerFunc(deps))
+	http.HandleFunc("/alertslocations", alertsLocationsHandlerFunc(deps))
 
 	log.Fatal(http.ListenAndServe("localhost:6500", nil))
 }

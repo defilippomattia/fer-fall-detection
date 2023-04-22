@@ -15,5 +15,9 @@
     "redis":{
         "host":"localhost",
         "port":"6379"
+    },
+    "pager":{
+        "host":"localhost",
+        "port":"6504"
     }
 }

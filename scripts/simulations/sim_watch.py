@@ -1,6 +1,7 @@
 import requests
 import utils
 
+latlong = utils.get_random_fer_lat_lon()
 payload = {
     "specversion":"1.0",
     "id":"bd4145c3-ec0e-4406-b419-4a770a699987",
@@ -14,7 +15,7 @@ payload = {
        "owner":utils.get_random_phone_num(),
        "contact": utils.get_random_phone_num(),
        "timestamp":utils.get_timestamp(),
-       "content":f"My current location: http://maps.google.com/maps?q={utils.get_random_lat()},{utils.get_random_lon()}",
+       "content":f"My current location: http://maps.google.com/maps?q={latlong[0]},{latlong[1]}",
        "sim":"DEFAULT"
     }
 }

@@ -62,7 +62,7 @@
     </div>
   </div>
   
-  <style>
+  <!-- <style>
     .card {
       border-radius: 12px;
       border: 1px solid #f95738;
@@ -143,4 +143,4 @@
     -webkit-appearance: none;
   }
   
-  </style>
+  </style> -->
