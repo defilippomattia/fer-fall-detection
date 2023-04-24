@@ -1,6 +1,5 @@
 <script>
     export let data;
-  
     const isResolved = data.resolved;
     let comment = data.comment;
     function getResolvedClass() {
@@ -61,8 +60,8 @@
       </div>
     </div>
   </div>
-  
-  <!-- <style>
+
+  <style>
     .card {
       border-radius: 12px;
       border: 1px solid #f95738;
@@ -106,7 +105,7 @@
       margin: 24px 0;
     }
     textarea {
-      width: 100%;
+      width: 90%;
       height: 120px;
       padding: 16px;
       border-radius: 12px;
@@ -143,4 +142,6 @@
     -webkit-appearance: none;
   }
   
-  </style> -->
+  </style>
+  
+  

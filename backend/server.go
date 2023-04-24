@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"os"
 	"regexp"
 	"strconv"
 	"strings"
@@ -36,10 +37,10 @@ type HandlersDependencies struct {
 // write function get db client
 func getMongoClient() (*mongo.Client, error) {
 	//later will come from config file
-	host := "localhost"
-	port := "27017"
-	user := "root"
-	password := "root"
+	host := os.Getenv("FFD_MONGO_HOST")
+	port := os.Getenv("FFD_MONGO_PORT")
+	user := os.Getenv("FFD_MONGO_USER")
+	password := os.Getenv("FFD_MONGO_PASSWORD")
 
 	connectionURI := fmt.Sprintf("mongodb://%s:%s@%s:%s", user, password, host, port)
 
@@ -64,8 +65,8 @@ func getMongoClient() (*mongo.Client, error) {
 
 func getRedisClient() (*redis.Client, error) {
 	//later will come from config file
-	host := "localhost"
-	port := "6379"
+	host := os.Getenv("FFD_REDIS_HOST")
+	port := os.Getenv("FFD_REDIS_PORT")
 
 	connectionURI := fmt.Sprintf("%s:%s", host, port)
 
@@ -222,8 +223,10 @@ func getAlertsLocationsHandler(w http.ResponseWriter, r *http.Request, deps *Han
 	client := deps.mongoClient
 	collection := client.Database("fer-fall-detect").Collection("alerts")
 
-	// Query the MongoDB database to retrieve all alerts
-	cursor, err := collection.Find(context.Background(), bson.M{})
+	// Query the MongoDB database to retrieve all alerts with resolved = false
+	filter := bson.M{"resolved": false}
+	//cursor, err := collection.Find(context.Background(), bson.M{})
+	cursor, err := collection.Find(context.Background(), filter)
 	if err != nil {
 		log.Println(err)
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
@@ -453,6 +456,18 @@ func alertsLocationsHandlerFunc(deps *HandlersDependencies) http.HandlerFunc {
 func main() {
 	// start the server
 
+	FFD_MONGO_HOST := os.Getenv("FFD_MONGO_HOST")
+	FFD_MONGO_PORT := os.Getenv("FFD_MONGO_PORT")
+	FFD_MONGO_USER := os.Getenv("FFD_MONGO_USER")
+	FFD_MONGO_PASSWORD := os.Getenv("FFD_MONGO_PASSWORD")
+	FFD_REDIS_HOST := os.Getenv("FFD_REDIS_HOST")
+	FFD_REDIS_PORT := os.Getenv("FFD_REDIS_PORT")
+
+	if FFD_MONGO_HOST == "" || FFD_MONGO_PORT == "" || FFD_MONGO_USER == "" || FFD_MONGO_PASSWORD == "" || FFD_REDIS_HOST == "" || FFD_REDIS_PORT == "" {
+		log.Fatal("Error - Environment variables not set")
+		return
+	}
+
 	redisClient, err := getRedisClient()
 	if err != nil {
 		log.Fatal(err)
@@ -472,5 +487,5 @@ func main() {
 	http.HandleFunc("/alerts", alertsHandlerFunc(deps))
 	http.HandleFunc("/alertslocations", alertsLocationsHandlerFunc(deps))
 
-	log.Fatal(http.ListenAndServe("localhost:6500", nil))
+	log.Fatal(http.ListenAndServe("0.0.0.0:6500", nil))
 }

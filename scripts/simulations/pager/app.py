@@ -6,6 +6,7 @@ app = Flask(__name__)
 
 # Connect to Redis
 r = redis.Redis(host='localhost', port=6379, db=0)
+#r = redis.Redis(host='redis', port=6379, db=0)
 
 pubsub = r.pubsub()
 pubsub.subscribe('alerts')

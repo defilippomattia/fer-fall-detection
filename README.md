@@ -9,6 +9,13 @@ Python 3.10.0 (mediapipe is not compatible with Python 3.11.0)
 pip 21.2.3  
 go 1.20.1
 
+## Set environment variables
+
+### Windows
+Run as admin (from powershell for eg.): fer-fall-detect/scripts/setenvvar/win.ps1
+### Linux
+
+
 
 `git clone https://github.com/defilippomattia/fer-fall-detect`  
 `cd ./fer-fall-detect`  
