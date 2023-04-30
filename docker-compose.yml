@@ -51,3 +51,18 @@ services:
       - "6501:6501"
     depends_on:
       - web
+
+  nginx:
+    image: nginx
+    container_name: nginx-container
+    restart: always
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
+      - ./server.crt:/etc/nginx/certs/server.crt
+      - ./server.key:/etc/nginx/certs/server.key
+
+    depends_on:
+      - web
