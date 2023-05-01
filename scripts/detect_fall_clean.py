@@ -10,7 +10,8 @@ class FallDetector:
         self.mp_drawing = mp.solutions.drawing_utils
         self.mp_pose = mp.solutions.pose
         self.time_between_frames = 0.0333 #fps = 30, 640x480
-        self.velocities_list_length = 10
+        self.velocities_list_length = 12
+        self.avg_velocity_threshold = 0.8
         self.landmarks_dict = {
             "NOSE"      :self.mp_pose.PoseLandmark.NOSE,
             "LEFT_WRIST":self.mp_pose.PoseLandmark.LEFT_WRIST
@@ -27,8 +28,9 @@ class FallDetector:
 
     def detect_fall(self):
         frame_num = 0
-        cap = cv2.VideoCapture(0)
-        #cap = cv2.VideoCapture(".\WIN_20230429_22_54_08_Pro.mp4")
+        #cap = cv2.VideoCapture(0)
+        #cap = cv2.VideoCapture(".\WIN_20230501_20_42_48_Pro.mp4")
+        cap = cv2.VideoCapture(".\\videoplayback.mp4")
         prev_x, prev_y = None, None
         velocities = []
 
@@ -47,7 +49,7 @@ class FallDetector:
                 image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
 
                 if results.pose_landmarks:
-                    cur_x,cur_y,_ = self.get_landmarks(results, "LEFT_WRIST")
+                    cur_x,cur_y,_ = self.get_landmarks(results, "NOSE")
                     if prev_x is not None and prev_y is not None:
                         distance = self.calculate_distance(cur_x, cur_y, prev_x, prev_y)
                         velocity = distance / self.time_between_frames
@@ -57,7 +59,7 @@ class FallDetector:
                             print(f"avg velocity: {avg_velocity}")
                             velocities = []
                         
-                    if avg_velocity is not None and avg_velocity > 0.5:
+                    if avg_velocity is not None and avg_velocity > self.avg_velocity_threshold:
                         print("FALL DETECTED")
                         fall_detected = True
 
@@ -67,7 +69,7 @@ class FallDetector:
                     cv2.putText(image, "Fall Detected", (50,50), cv2.FONT_HERSHEY_SIMPLEX, 1, (0,0,255), 2)
                 
                 else:
-                    cv2.putText(image, "No Fall Detected", (50,50), cv2.FONT_HERSHEY_SIMPLEX, 1, (0,255,0), 2)
+                    cv2.putText(image, "", (50,50), cv2.FONT_HERSHEY_SIMPLEX, 1, (0,255,0), 2)
 
                 self.mp_drawing.draw_landmarks(image, results.pose_landmarks, self.mp_pose.POSE_CONNECTIONS,
                         self.mp_drawing.DrawingSpec(color=(245,117,66), thickness=2, circle_radius=2), 
