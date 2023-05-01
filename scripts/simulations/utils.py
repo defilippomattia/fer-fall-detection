@@ -8,17 +8,6 @@ def get_random_hostname():
     rand_letters = ''.join(random.choices(string.ascii_uppercase + string.digits, k=7))
     return prefix + rand_letters + suffix
 
-# def get_random_lat():
-#     min_lat, max_lat = -90.0, 90.0
-#     lat = round(random.uniform(min_lat, max_lat), 2)
-#     return (str(lat))
-
-
-# def get_random_lon():
-#     min_lon, max_lon = -180.0, 180.0
-#     lon = round(random.uniform(min_lon, max_lon), 2)
-#     return str(lon)
-
 def get_random_fer_lat_lon():
     bounds = [[45.80006, 15.97061], [45.80163, 15.97181]]
     coordinates = []
@@ -27,7 +16,6 @@ def get_random_fer_lat_lon():
     coordinates.append(str(lat))
     coordinates.append(str(lng))
     return coordinates
-
 
 def get_timestamp():
     return datetime.now().strftime("%Y-%m-%d %H:%M:%S")
@@ -42,4 +30,4 @@ def get_random_phone_num():
     return prefix + rand_digits
 
 def get_alerts_endpoint():
-    return "http://localhost:6500/alerts"
+    return "https://fer.westeurope.cloudapp.azure.com/alerts"

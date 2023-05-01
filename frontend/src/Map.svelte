@@ -40,7 +40,7 @@
     let markers = [];
 
     onMount(async () => {
-        const response = await fetch('http://web:6500/alertslocations');
+        const response = await fetch('/alertslocations');
         const data = await response.json();
         markers = data;
         leafletMap.getMap().fitBounds([[45.80006, 15.97061], [45.80163, 15.97181]]);

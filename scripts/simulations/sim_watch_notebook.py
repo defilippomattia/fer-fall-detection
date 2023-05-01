@@ -40,7 +40,7 @@ for i in range(num_notebook_requests):
     notebook_payload["longitude"] = latlong[1]
     notebook_payload["timestamp"] = utils.get_timestamp()
     time.sleep(utils.get_random_sleep())
-    response = requests.post(url, json=notebook_payload)
+    response = requests.post(url, json=notebook_payload, verify=False)
 
 for i in range(num_watch_requests):
     latlong = utils.get_random_fer_lat_lon()
@@ -49,5 +49,5 @@ for i in range(num_watch_requests):
     watch_payload["data"]["timestamp"] = utils.get_timestamp()
     watch_payload["data"]["content"] = f"My current location: http://maps.google.com/maps?q={latlong[0]},{latlong[1]}"
     time.sleep(utils.get_random_sleep())
-    response = requests.post(url, json=watch_payload)
+    response = requests.post(url, json=watch_payload,verify=False)
 

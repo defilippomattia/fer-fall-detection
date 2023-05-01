@@ -12,7 +12,7 @@
   
     async function handleResolve(event) {
     comment = event.target.parentNode.querySelector('textarea').value;
-    const response = await fetch('http://web:6500/alerts', {
+    const response = await fetch('/alerts', {
       method: 'PATCH',
       headers: {
         'Content-Type': 'application/json'

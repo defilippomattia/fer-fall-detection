@@ -1,0 +1,1 @@
+sudo apt-get update -y && sudo apt-get install -y docker docker-compose && git clone https://github.com/defilippomattia/fer-fall-detection.git

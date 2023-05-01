@@ -1,2 +1,7 @@
 /venv
 scripts/simulations/__pycache__/
+/infra/.terraform.lock.hcl
+/infra/.terraform/
+infra/terraform.tfstate
+infra/terraform.tfstate.backup
+infra/secret.json

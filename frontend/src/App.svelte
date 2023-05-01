@@ -8,8 +8,7 @@
     let alerts = [];
   
   async function fetchAlerts() {
-    const response = await fetch('http://web:6500/alerts'); //when using docker, maybe not?
-    //const response = await fetch('http://localhost:6500/alerts');
+    const response = await fetch('/alerts'); //when using docker, maybe not?
     alerts = await response.json();
     console.log(alerts.length);
   }
