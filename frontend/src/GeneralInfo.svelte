@@ -39,13 +39,30 @@
       <th>Advisor</th>
       <td>mag. ing. Ivana Slošić</td>
     </tr>
+    <tr>
+      <th>Thesis Number</th>
+      <td>TODO</td>
+    </tr>
+    <tr>
+      <th>Academic Year</th>
+      <td>2022./2023.</td>
+    </tr>
+    <tr>
+      <th>Location</th>
+      <td>Zagreb, Croatia</td>
+    </tr>
+
 
 
   </table>
   <br>
   <br>
   
-
+    <p class="header-description">Disclaimer: For the purposes of presentation and testing, 
+    the data used in this application is mocked and located in the vicinity 
+    of the university (University of Zagreb - Faculty of Electrical Engineering and Computing). 
+    This data does not represent a real situation.</p>
+    <br>
   <style>
     .header {
         text-align: center;

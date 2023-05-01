@@ -3,7 +3,7 @@
 	import AlertCard from './AlertCard.svelte';
 	import { onMount } from 'svelte';
   import GeneralInfo from './GeneralInfo.svelte';
-  import DemoButtons from './DemoButtons.svelte';
+  //import DemoButtons from './DemoButtons.svelte';
 
     let alerts = [];
   
@@ -30,7 +30,6 @@
 	{/each}
   </div>
 
-<DemoButtons/>
 
     <style>
         :global(body) {
