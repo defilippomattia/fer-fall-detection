@@ -11,4 +11,4 @@ payload = {
     "timestamp": utils.get_timestamp()
 }
 url = utils.get_alerts_endpoint()
-response = requests.post(url, json=payload)
+response = requests.post(url, json=payload,verify=False)

@@ -21,4 +21,4 @@ payload = {
 }
 
 url = utils.get_alerts_endpoint()
-response = requests.post(url, json=payload)
+response = requests.post(url, json=payload,verify=False)
