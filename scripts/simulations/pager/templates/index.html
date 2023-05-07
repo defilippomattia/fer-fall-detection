@@ -1,19 +1,33 @@
-<!doctype html>
+<!DOCTYPE html>
 <html>
-  <head>
-    <title>Redis messages</title>
-  </head>
-  <body>
-    <h1>Redis messages</h1>
+<head>
+    <meta charset="utf-8">
+    <title>Redis Message Viewer</title>
+</head>
+<body>
+    <h1>Redis Message Viewer</h1>
     <ul id="messages"></ul>
+
     <script>
-      var eventSource = new EventSource('/stream');
-      eventSource.onmessage = function(event) {
-        var message = JSON.parse(event.data);
-        var li = document.createElement("li");
-        li.appendChild(document.createTextNode(JSON.stringify(message)));
-        document.getElementById("messages").appendChild(li);
-      };
+        function getMessages() {
+            fetch('/messages')
+                .then(response => response.json())
+                .then(data => {
+                    console.log("mattia")
+                    console.log(data);
+                    console.log(response);
+                    const messagesList = document.getElementById('messages');
+                    messagesList.innerHTML = '';
+
+                    data.forEach(message => {
+                        const li = document.createElement('li');
+                        li.textContent = message.Id + ': ' + message.comment;
+                        messagesList.appendChild(li);
+                    });
+                });
+        }
+
+        setInterval(getMessages, 5000);
     </script>
-  </body>
+</body>
 </html>
