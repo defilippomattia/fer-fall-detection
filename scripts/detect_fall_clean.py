@@ -19,9 +19,9 @@ class FallDetector:
             "NOSE"      :self.mp_pose.PoseLandmark.NOSE,
             "LEFT_WRIST":self.mp_pose.PoseLandmark.LEFT_WRIST,
             #"LEFT_HEEL" :self.mp_pose.PoseLandmark.LEFT_HEEL,
-            "LEFT_HEEL" :self.mp_pose.PoseLandmark.LEFT_HIP,
+            "LEFT_HIP" :self.mp_pose.PoseLandmark.LEFT_HIP,
             #"RIGHT_HEEL":self.mp_pose.PoseLandmark.RIGHT_HEEL,
-            "RIGHT_HEEL":self.mp_pose.PoseLandmark.RIGHT_HIP,
+            "RIGHT_HIP":self.mp_pose.PoseLandmark.RIGHT_HIP,
             "LEFT_SHOULDER":self.mp_pose.PoseLandmark.LEFT_SHOULDER,
             "RIGHT_SHOULDER":self.mp_pose.PoseLandmark.RIGHT_SHOULDER,
         }
@@ -62,8 +62,8 @@ class FallDetector:
 
                 if results.pose_landmarks:
                     cur_x,cur_y,_ = self.get_landmarks(results, "NOSE")
-                    LEFT_HEEL_X, LEFT_HEEL_Y, _ = self.get_landmarks(results, "LEFT_HEEL")
-                    RIGHT_HEEL_X, RIGHT_HEEL_Y, _ = self.get_landmarks(results, "RIGHT_HEEL")
+                    LEFT_HIP_X, LEFT_HIP_Y, _ = self.get_landmarks(results, "LEFT_HIP")
+                    RIGHT_HIP_X, RIGHT_HIP_Y, _ = self.get_landmarks(results, "RIGHT_HIP")
                     LEFT_SHOULDER_X, LEFT_SHOULDER_Y, _ = self.get_landmarks(results, "LEFT_SHOULDER")
                     RIGHT_SHOULDER_X, RIGHT_SHOULDER_Y, _ = self.get_landmarks(results, "RIGHT_SHOULDER")
                     if prev_x is not None and prev_y is not None:
@@ -74,10 +74,11 @@ class FallDetector:
                         #cv2.putText(image, str(velocity), (50,100), cv2.FONT_HERSHEY_SIMPLEX, 1, (0,0,255), 2)
 
                         if velocity < 3:
+                            #when person suddenly appears in frame, velocity is very high, ignoring those
                             self.all_velocities.append(velocity)
 
-                        if LEFT_HEEL_Y and RIGHT_HEEL_Y and LEFT_SHOULDER_Y and RIGHT_SHOULDER_Y:
-                            if LEFT_HEEL_Y > LEFT_SHOULDER_Y and RIGHT_HEEL_Y > RIGHT_SHOULDER_Y:
+                        if LEFT_HIP_Y and RIGHT_HIP_Y and LEFT_SHOULDER_Y and RIGHT_SHOULDER_Y:
+                            if LEFT_HIP_Y > LEFT_SHOULDER_Y and RIGHT_HIP_Y > RIGHT_SHOULDER_Y:
                                 standing = True
                                 self.all_standings.append(1)
                             else:
