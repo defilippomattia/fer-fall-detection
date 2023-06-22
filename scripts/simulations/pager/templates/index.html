@@ -1,33 +1,35 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="utf-8">
-    <title>Redis Message Viewer</title>
-</head>
-<body>
-    <h1>Redis Message Viewer</h1>
-    <ul id="messages"></ul>
-
+    <title>Redis Message Updates</title>
+    <h4>Pager App - Pub-Sub Architecture Demo</h4>
+    <p>This pager app is designed to showcase the pub-sub architecture using Redis.</p>
+    It demonstrates real-time updates of messages received from Redis and displays them in the UI dynamically.</p>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
-        function getMessages() {
-            fetch('/messages')
-                .then(response => response.json())
-                .then(data => {
-                    console.log("mattia")
-                    console.log(data);
-                    console.log(response);
-                    const messagesList = document.getElementById('messages');
-                    messagesList.innerHTML = '';
-
-                    data.forEach(message => {
-                        const li = document.createElement('li');
-                        li.textContent = message.Id + ': ' + message.comment;
-                        messagesList.appendChild(li);
-                    });
-                });
+        function updateMessages() {
+            $.getJSON('/get_all_messages', function(data) {
+                var messages = data.messages;
+                var messageList = '';
+                for (var i = 0; i < messages.length; i++) {
+                    var message = messages[i];
+                    messageList += '<p><b>Source Type:</b> ' + message.source_type + ' </p>';
+                    messageList += '<p><b>Source ID:</b> ' + message.source_id + ' </p>';
+                    messageList += '<p><b>Longitude:</b> ' + message.longitude + ' </p>';
+                    messageList += '<p><b>Latitude:</b> ' + message.latitude + ' </p>';
+                    messageList += '<p><b>Timestamp:</b> ' + message.timestamp + ' </p>';
+                    messageList += '<hr>';
+                }
+                $('#message-list').html(messageList);
+            });
         }
 
-        setInterval(getMessages, 5000);
+        // Poll for updates every 1 second
+        setInterval(updateMessages, 1000);
     </script>
+</head>
+<body>
+    <h1>All Messages:</h1>
+    <div id="message-list"></div>
 </body>
 </html>
