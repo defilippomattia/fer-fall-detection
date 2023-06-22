@@ -4,6 +4,14 @@ import numpy as np
 import time
 import json
 from datetime import datetime
+# import requests
+# import socket
+# from datetime import datetime
+# import ipapi
+# import urllib.request
+
+# ip_address = urllib.request.urlopen('https://ident.me').read().decode('utf8')
+# ip_location = ipapi.location(ip_address)
 
 class FallDetector:
     def __init__(self):
@@ -93,6 +101,16 @@ class FallDetector:
                     if avg_velocity is not None and avg_velocity > self.avg_velocity_threshold and rolling_standings < self.rolling_standings_threshold:
                     #if avg_velocity is not None and avg_velocity > self.avg_velocity_threshold:
                         print("FALL DETECTED")
+                        
+                        # payload = {
+                        #     "source_type": "notebook",
+                        #     "source_id": socket.gethostname(),
+                        #     "latitude": ip_location["latitude"],
+                        #     "longitude": ip_location["longitude"],
+                        #     "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                        # }
+                        # url = "https://fer.westeurope.cloudapp.azure.com/alerts"
+                        # response = requests.post(url, json=payload,verify=False)
                     
                         print(f"DISTANCE: {distance}")
 
